@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Notiflix from 'notiflix';
 
@@ -11,50 +11,71 @@ import LoadMoreButton from './Button/Button';
 import SpinnerLoader from './Loader/Loader';
 import Modal from './Modal/Modal';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      hits: [],
-      name: '',
-      page: 1,
-      showModal: false,
-      loading: false,
-      largeImageURL: '',
-      tags: '',
-      totalHits: 0,
-    };
-  }
+const App = () => {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     hits: [],
+  //     name: '',
+  //     page: 1,
+  //     showModal: false,
+  //     loading: false,
+  //     largeImageURL: '',
+  //     tags: '',
+  //     totalHits: 0,
+  //   };
+  // }
 
-  componentDidMount() {}
+  const [hits, setHits] = useState([]);
+  const [name, setName] = useState('');
+  const [page, setPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [largeImageURL, setLargeImageURL] = useState('');
+  const [tags, setTags] = useState('');
+  const [totalHits, setTotalHits] = useState(0);
+  // componentDidMount() {}
 
-  componentDidUpdate(prevProps, prevState) {
-    const { name, page } = this.state;
-    if (prevState.name !== name || prevState.page !== page) {
-      this.fetchImages();
+  // componentDidUpdate(prevProps, prevState) {
+  //   const { name, page } = this.state;
+  //   if (prevState.name !== name || prevState.page !== page) {
+  //     this.fetchImages();
+  //   }
+  // }
+
+  useEffect(() => {
+    if (name !== '' && (page === 1 || page > 1)) {
+      fetchImages();
     }
-  }
+  }, [name, page]);
 
-  toggleModal = (imageURL, tag) => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-      largeImageURL: imageURL,
-      tags: tag,
-    }));
+  const toggleModal = (imageURL, tag) => {
+    // this.setState(({ showModal }) => ({
+    //   showModal: !showModal,
+    //   largeImageURL: imageURL,
+    //   tags: tag,
+    // }));
+    setShowModal(!showModal);
+    setLargeImageURL(imageURL);
+    setTags(tag);
   };
 
-  getValue = ({ name }) => {
-    this.setState({
-      hits: [],
-      name,
-      page: 1,
-      totalHits: 0,
-    });
+  const getValue = ({ name }) => {
+    // this.setState({
+    //   hits: [],
+    //   name,
+    //   page: 1,
+    //   totalHits: 0,
+    // });
+    setHits([]);
+    setName(name);
+    setPage(1);
+    setTotalHits(0);
   };
 
-  fetchImages = () => {
-    const { name, page } = this.state;
-    this.setState({ loading: true });
+  const fetchImages = () => {
+    // const { name, page } = this.state;
+    setLoading(true);
     try {
       axios
         .get(
@@ -72,47 +93,46 @@ class App extends Component {
               largeImageURL,
             })
           );
-          this.setState(prevState => ({
-            hits: [...prevState.hits, ...modifiedHits],
-            totalHits: response.data.totalHits,
-            loading: false,
-          }));
+          // this.setState(prevState => ({
+          //   hits: [...prevState.hits, ...modifiedHits],
+          //   totalHits: response.data.totalHits,
+          //   loading: false,
+          // }));
+          setHits(prevHits => [...prevHits, ...modifiedHits]);
+          setTotalHits(response.data.totalHits);
+          setLoading(false);
         });
     } catch (error) {
       console.error(error.message);
-      this.setState({ loading: false });
+      setLoading(false);
     }
   };
 
-  loadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const loadMore = () => {
+    setPage(prevPage => prevPage + 1);
   };
 
-  render() {
-    const { hits, showModal, loading, largeImageURL, totalHits } = this.state;
+  // const { hits, showModal, loading, largeImageURL, totalHits } = this.state;
 
-    return (
-      <div>
-        <SearchBar onSubmitHandler={this.getValue} />
+  return (
+    <div>
+      <SearchBar onSubmitHandler={getValue} />
 
-        {hits.length > 0 && (
-          <ImageGallery>
-            <ImageGalleryItem articles={hits} onImage={this.toggleModal} />
-          </ImageGallery>
-        )}
+      {hits.length > 0 && (
+        <ImageGallery>
+          <ImageGalleryItem articles={hits} onImage={toggleModal} />
+        </ImageGallery>
+      )}
 
-        {showModal && <Modal onClose={this.toggleModal} url={largeImageURL} />}
+      {showModal && <Modal onClose={toggleModal} url={largeImageURL} />}
 
-        {loading && <SpinnerLoader />}
+      {loading && <SpinnerLoader />}
 
-        {totalHits > 0 && hits.length < totalHits && (
-          <LoadMoreButton onButtonClick={this.loadMore} />
-        )}
-      </div>
-    );
-  }
-}
+      {totalHits > 0 && hits.length < totalHits && (
+        <LoadMoreButton onButtonClick={loadMore} />
+      )}
+    </div>
+  );
+};
 
 export default App;
