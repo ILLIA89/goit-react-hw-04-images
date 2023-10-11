@@ -11,23 +11,23 @@ const Modal = props => {
   // componentWillUnmount() {
   //   window.removeEventListener('keydown', this.handleKeyDown);
   // }
-  const handleKeyDown = event => {
-    if (event.code === 'Escape') {
-      onClose();
-    }
-  };
-
   const handleBackdropClick = event => {
     if (event.target === overlayRef.current) {
       onClose();
     }
   };
+
   useEffect(() => {
+    const handleKeyDown = event => {
+      if (event.code === 'Escape') {
+        onClose();
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('click', handleBackdropClick);
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('click', handleBackdropClick);
     };
   }, [onClose]);
 
