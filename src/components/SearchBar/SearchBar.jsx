@@ -1,63 +1,45 @@
-import React, { useState } from 'react';
-import Notiflix from 'notiflix';
-import styles from './SearchBar.module.css';
+import { useState } from 'react';
 
-const SearchBar = props => {
-  // state = {
-  //   name: '',
-  // };
-  const [name, setName] = useState('');
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { SearchbarBox } from './Searchbar.styled';
 
-  const handleChange = event => {
-    const { value } = event.currentTarget;
-    setName(value);
+export function Searchbar({ onSubmit }) {
+  const [requestName, setRequest] = useState('');
+
+  const handleInputChange = e => {
+    setRequest(e.currentTarget.value.toLowerCase());
   };
 
-  const handleSubmit = event => {
-    event.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault();
 
-    if (name.trim() === '') {
-      Notiflix.Notify.failure('search string is empty!');
-      return;
+    if (requestName.trim() === '') {
+      return toast.error('Please write your request');
     }
 
-    props.onSubmitHandler({ name });
+    onSubmit(requestName);
 
-    reset();
-  };
-
-  const reset = () => {
-    setName('');
+    setRequest('');
   };
 
   return (
-    <header className={styles.SearchBar}>
-      <form className={styles.SearchForm} onSubmit={handleSubmit}>
-        <button type="submit" className={styles.SearchFormButton}>
-          <span className={styles.SearchFormButtonLabel}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              viewBox="0 0 20 20"
-            >
-              <title>search</title>
-              <path d="M19 17l-5.15-5.15a7 7 0 1 0-2 2L17 19zM3.5 8A4.5 4.5 0 1 1 8 12.5 4.5 4.5 0 0 1 3.5 8z" />
-            </svg>
-          </span>
+    <SearchbarBox>
+      <form onSubmit={handleSubmit}>
+        <button type="submit">
+          <span>Search</span>
         </button>
 
         <input
-          className={styles.SearchFormInput}
           type="text"
-          onChange={handleChange}
+          name="requestName"
+          value={requestName}
           autoComplete="off"
           autoFocus
           placeholder="Search images and photos"
+          onChange={handleInputChange}
         />
       </form>
-    </header>
+    </SearchbarBox>
   );
-};
-
-export default SearchBar;
+}

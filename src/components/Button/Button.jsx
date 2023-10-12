@@ -1,13 +1,9 @@
-import styles from './Button.module.css';
+import { ButtonBox } from './Button.styled';
 
-const LoadMoreButton = ({ onButtonClick }) => {
+export const Button = ({ onClick }) => {
   return (
-    <div className={styles.BtnContainer}>
-      <button className={styles.Button} type="button" onClick={onButtonClick}>
-        Load more
-      </button>
-    </div>
+    <ButtonBox type="submit" onClick={() => onClick()}>
+      Load more
+    </ButtonBox>
   );
 };
-
-export default LoadMoreButton;

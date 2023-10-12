@@ -1,20 +1,18 @@
-import styles from './ImageGalleryItem.module.css';
+import { StyledGalleryItem } from './ImageGalleryItem.styled';
 
-const ImageGalleryItem = ({ articles, onImage }) => {
+export const ImageGalleryItem = ({ data, onOpenModal }) => {
   return (
     <>
-      {articles.map(({ id, webformatURL, largeImageURL, tags }) => (
-        <li className={styles.ImageGalleryItem} key={id}>
-          <img
-            src={webformatURL}
-            alt="response from API"
-            className={styles.ImageGalleryItemImage}
-            onClick={() => onImage(largeImageURL, tags, id)}
-          />
-        </li>
-      ))}
+      {data.map(({ id, largeImageURL, webformatURL, tags }) => {
+        return (
+          <StyledGalleryItem
+            key={id}
+            onClick={() => onOpenModal(largeImageURL, tags)}
+          >
+            <img src={webformatURL} alt={tags} />
+          </StyledGalleryItem>
+        );
+      })}
     </>
   );
 };
-
-export default ImageGalleryItem;

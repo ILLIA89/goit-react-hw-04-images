@@ -1,48 +1,30 @@
-import React, { useEffect, useRef } from 'react';
-import styles from './Modal.module.css';
+import { useEffect } from 'react';
+import { Overlay } from './Modal.styled';
 
-const Modal = props => {
-  const { url, alt, onClose } = props;
-  const overlayRef = useRef(null);
-  // componentDidMount() {
-  //   window.addEventListener('keydown', this.handleKeyDown);
-  // }
-
-  // componentWillUnmount() {
-  //   window.removeEventListener('keydown', this.handleKeyDown);
-  // }
-  const handleBackdropClick = event => {
-    if (event.target === overlayRef.current) {
-      onClose();
-    }
-  };
-
+export function Modal({ onCloseModal, children }) {
   useEffect(() => {
-    const handleKeyDown = event => {
-      if (event.code === 'Escape') {
-        onClose();
+    const onKeyDown = e => {
+      if (e.code === 'Escape') {
+        onCloseModal();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', onKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keydown', onKeyDown);
     };
-  }, [onClose]);
+  }, [onCloseModal]);
 
-  // const { url, alt } = this.props;
+  const onOverlayClick = e => {
+    if (e.currentTarget === e.target) {
+      onCloseModal();
+    }
+  };
+
   return (
-    <div
-      className={styles.Overlay}
-      onClick={handleBackdropClick}
-      ref={overlayRef}
-    >
-      <div className={styles.Modal}>
-        <img src={url} alt={alt} />
-      </div>
-    </div>
+    <Overlay onClick={onOverlayClick}>
+      <div>{children}</div>
+    </Overlay>
   );
-};
-
-export default Modal;
+}
