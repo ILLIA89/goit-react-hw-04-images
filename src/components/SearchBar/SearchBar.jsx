@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { SearchbarBox } from './Searchbar.styled';
+import { SearchBarBox } from './SearchBar.styled';
 
-export function Searchbar({ onSubmit }) {
+export function SearchBar({ onSubmit }) {
   const [requestName, setRequest] = useState('');
 
   const handleInputChange = e => {
@@ -24,7 +24,7 @@ export function Searchbar({ onSubmit }) {
   };
 
   return (
-    <SearchbarBox>
+    <SearchBarBox>
       <form onSubmit={handleSubmit}>
         <button type="submit">
           <span>Search</span>
@@ -40,6 +40,6 @@ export function Searchbar({ onSubmit }) {
           onChange={handleInputChange}
         />
       </form>
-    </SearchbarBox>
+    </SearchBarBox>
   );
 }

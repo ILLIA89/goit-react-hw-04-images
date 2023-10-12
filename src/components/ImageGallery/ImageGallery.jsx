@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 
 import { fetchRequest } from 'services/api';
-import { Loader } from 'components/Loader/Loader';
+import Loader from 'components/Loader/Loader';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Modal } from 'components/Modal/Modal';
 import { StyledGallery } from './ImageGallery.styled';
 import { Button } from 'components/Button/Button';
-import { scrollToBottom } from 'utils/scroll';
+import scrollToBottom from 'utilities/scroll';
 
 export function ImageGallery({ requestName }) {
   const [request, setRequest] = useState([]);
